@@ -1,21 +1,41 @@
-import React from "react";
-import CategoryFilter from "./CategoryFilter";
-import NewTaskForm from "./NewTaskForm";
-import TaskList from "./TaskList";
+import React, {useState} from "react";
+import Form from './Form';
 
-import { CATEGORIES, TASKS } from "../data";
-console.log("Here's the data you're working with");
-console.log({ CATEGORIES, TASKS });
 
-function App() {
-  return (
-    <div className="App">
-      <h2>My tasks</h2>
-      <CategoryFilter />
-      <NewTaskForm />
-      <TaskList />
+
+function App () {
+const [tasks, setTasks] = useState([]);
+
+const taskComplete = (i) => 
+  setTasks(tasks.map((task, k) => 
+    k === i ? {
+      ...task,
+      complete: !task.complete
+    }
+    :task
+  )
+);
+
+return (
+  <div className="App">
+    <Form 
+    onSubmit={text => setTasks([{text, complete: false}, ...tasks])}
+    />
+    <div>
+      {tasks.map(({text, complete}, i) => (
+      <div 
+      key={text} 
+      onClick={()=>taskComplete(i)}
+      style={{
+        textDecoration: complete ? 'line-through' : ""
+      }}
+      >{text}</div>
+      ))}
     </div>
+    <button onclick={() => setTasks([])}>reset</button>
+  </div>
+
   );
-}
+};
 
 export default App;
